@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven 3.9.6'    // Jenkins tool name for Maven
+        jdk 'Java 17'          // Jenkins tool name for JDK
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-username/your-springboot-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package' // Use 'bat' instead of 'sh' on Windows agents
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deployment step - implement deployment logic here'
+                // Example: sh 'scp target/demo.jar user@server:/path/to/deploy/'
+            }
+        }
+    }
+}
